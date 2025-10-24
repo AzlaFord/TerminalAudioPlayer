@@ -8,6 +8,15 @@ import (
 	"time"
 )
 
+func main() {
+	if len(os.Args) < 3 {
+		panic("Usage :player <action> <path>")
+	}
+	action := os.Args[1]
+	path := os.Args[2]
+	PlayFile(path, action)
+}
+
 func PlayFile(path, action string) {
 	file, err := os.ReadFile(path)
 	if err != nil {
