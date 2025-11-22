@@ -2,10 +2,11 @@ package player
 
 import (
 	"bytes"
-	"github.com/ebitengine/oto/v3"
-	"github.com/hajimehoshi/go-mp3"
 	"os"
 	"time"
+
+	"github.com/ebitengine/oto/v3"
+	"github.com/hajimehoshi/go-mp3"
 )
 
 func main() {
