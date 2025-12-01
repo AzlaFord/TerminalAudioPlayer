@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	playlists, err := playlist.DiscoverPaylists()
+	playlists, err := playlist.DiscoverPlaylists()
 	if err != nil {
 		fmt.Println("erroare", err)
 		return

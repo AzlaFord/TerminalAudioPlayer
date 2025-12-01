@@ -19,7 +19,7 @@ type Playlist struct {
 	Tracks []Track
 }
 
-func DiscoverPaylists() ([]Playlist, error) {
+func DiscoverPlaylists() ([]Playlist, error) {
 
 	home, erruser := os.UserHomeDir()
 
@@ -29,7 +29,8 @@ func DiscoverPaylists() ([]Playlist, error) {
 
 	var playLists []Playlist
 
-	files, err := os.ReadDir(home + "/Music")
+	musicDir := filepath.Join(home, "Music")
+	files, err := os.ReadDir(musicDir)
 
 	if err != nil {
 		return nil, err
@@ -42,7 +43,7 @@ func DiscoverPaylists() ([]Playlist, error) {
 			continue
 		}
 		// facut o varaibila locala si un path pentru a fi putea folosit in structura playlist
-		var pathPlaylist = home + "/Music/" + file.Name()
+		pathPlaylist := filepath.Join(musicDir, file.Name())
 		var tracksInThisPlayList []Track
 
 		track, err := os.ReadDir(pathPlaylist)
@@ -56,12 +57,12 @@ func DiscoverPaylists() ([]Playlist, error) {
 			if trackData.IsDir() {
 				continue
 			}
-
+			pathTrackData := filepath.Join(pathPlaylist, trackData.Name())
 			var extension = filepath.Ext(trackData.Name())
 			switch extension {
 			case ".mp3", ".wav", ".webm", ".ogg":
 				tracks := Track{
-					Path:  pathPlaylist + "/" + trackData.Name(),
+					Path:  pathTrackData,
 					Title: trackData.Name(),
 				}
 				tracksInThisPlayList = append(tracksInThisPlayList, tracks)
