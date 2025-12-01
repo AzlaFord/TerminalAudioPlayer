@@ -1,7 +1,10 @@
 import subprocess
+from pathlib import Path
 
+home = Path.home() / "Music"
 done = True
 link = ''
+
 while done:
     link = str(input('Introdu un link PlayList sau link normal : '))
     if link and len(link) >15:
@@ -19,8 +22,9 @@ command = [
     "-o", template,
     "--write-thumbnail",
     "-f", "bestaudio",
-    "-t","mp3",
-    "-P","/home/bivol/Music",
+    "-x",
+    "--audio-format", "mp3",
+    "-P",home,
     link
 ]
 
