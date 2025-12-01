@@ -15,7 +15,7 @@ func main() {
 	for _, playlist := range playlists {
 		fmt.Println(playlist.Name)
 		for _, trackname := range playlist.Tracks {
-			fmt.Println(trackname)
+			fmt.Println(trackname.Title)
 		}
 	}
 }
