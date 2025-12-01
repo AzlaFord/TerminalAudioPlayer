@@ -18,6 +18,7 @@ command = [
     "-o", template,
     "--write-thumbnail",
     "-f", "bestaudio",
+    "-P","/home/bivol/Music",
     link
 ]
 
