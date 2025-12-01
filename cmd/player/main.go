@@ -7,22 +7,47 @@ import (
 )
 
 func main() {
+
+	var index int
+	var index2 int
+	var cmd string
+
 	playlists, err := playlist.DiscoverPlaylists()
 	if err != nil {
 		fmt.Println("erroare", err)
-		return
 	}
 
-	pl := playlists[0]
-	t := pl.Tracks[0]
-	fmt.Println("Piesa", t.Title)
-	audio.PlayFile(t.Path)
+	for {
+		fmt.Scanln(&cmd)
+		selectedPlaylists := playlists[index]
 
-	// dau loop pentru a returna numele la playlisturi si cantecele
-	for _, playlist := range playlists {
-		fmt.Println(playlist.Name)
-		for _, trackname := range playlist.Tracks {
-			fmt.Println(trackname.Title)
+		switch cmd {
+
+		case "k":
+			for i, playlist := range playlists {
+				fmt.Println(i, playlist.Name)
+			}
+		case "l":
+			for i, song := range selectedPlaylists.Tracks {
+				fmt.Println(i, song.Title)
+			}
+		case "s":
+			fmt.Println("Introdu index playlist")
+			fmt.Scanln(&index)
+
+		case "t":
+			fmt.Println("Introdu index cantec")
+			fmt.Scanln(&index2)
+		case "p":
+			selectSong := selectedPlaylists.Tracks[index2]
+			err = audio.PlayFile(selectSong.Path)
+			if err != nil {
+				fmt.Println("Eroare la redare", err)
+			}
+		}
+
+		if cmd == "q" {
+			break
 		}
 	}
 }

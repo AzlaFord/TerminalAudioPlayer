@@ -3,7 +3,6 @@ package audio
 import (
 	"bytes"
 	"os"
-	"time"
 
 	"github.com/ebitengine/oto/v3"
 	"github.com/hajimehoshi/go-mp3"
@@ -34,8 +33,6 @@ func PlayFile(path string) error {
 	<-readyChan
 	player := otoCtx.NewPlayer(decodedMp3)
 	player.Play()
-	for player.IsPlaying() {
-		time.Sleep(time.Millisecond)
-	}
+
 	return nil
 }
