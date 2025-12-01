@@ -8,6 +8,7 @@ while done:
         done = False
     else:
         print('Link gresit incerca dinou ')
+
 # de facut logica la gasirea playlisturi imagini cover de la albumele originale
 # de avut optiunea de alege intre ele 
 
@@ -18,6 +19,7 @@ command = [
     "-o", template,
     "--write-thumbnail",
     "-f", "bestaudio",
+    "-t","mp3",
     "-P","/home/bivol/Music",
     link
 ]

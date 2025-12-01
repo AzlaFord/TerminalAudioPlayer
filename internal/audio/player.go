@@ -9,17 +9,18 @@ import (
 	"github.com/hajimehoshi/go-mp3"
 )
 
-func PlayFile(path string) {
+func PlayFile(path string) error {
+
 	file, err := os.ReadFile(path)
 	if err != nil {
-		panic("reading" + path + "failed" + err.Error())
+		return err
 	}
 
 	fileReader := bytes.NewReader(file)
 	decodedMp3, err := mp3.NewDecoder(fileReader)
 
 	if err != nil {
-		panic("mp3 new decoder failed" + err.Error())
+		return err
 	}
 
 	op := &oto.NewContextOptions{}
@@ -28,11 +29,13 @@ func PlayFile(path string) {
 	op.Format = oto.FormatSignedInt16LE
 	otoCtx, readyChan, err := oto.NewContext(op)
 	if err != nil {
-		panic("oto.NewContext failed: " + err.Error())
+		return err
 	}
 	<-readyChan
 	player := otoCtx.NewPlayer(decodedMp3)
+	player.Play()
 	for player.IsPlaying() {
 		time.Sleep(time.Millisecond)
 	}
+	return nil
 }
