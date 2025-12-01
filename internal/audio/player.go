@@ -1,4 +1,4 @@
-package player
+package audio
 
 import (
 	"bytes"
@@ -9,16 +9,7 @@ import (
 	"github.com/hajimehoshi/go-mp3"
 )
 
-func main() {
-	if len(os.Args) < 3 {
-		panic("Usage :player <action> <path>")
-	}
-	action := os.Args[1]
-	path := os.Args[2]
-	PlayFile(path, action)
-}
-
-func PlayFile(path, action string) {
+func PlayFile(path string) {
 	file, err := os.ReadFile(path)
 	if err != nil {
 		panic("reading" + path + "failed" + err.Error())
@@ -36,12 +27,11 @@ func PlayFile(path, action string) {
 	op.ChannelCount = 2
 	op.Format = oto.FormatSignedInt16LE
 	otoCtx, readyChan, err := oto.NewContext(op)
+	if err != nil {
+		panic("oto.NewContext failed: " + err.Error())
+	}
 	<-readyChan
 	player := otoCtx.NewPlayer(decodedMp3)
-
-	if action == "play" {
-		player.Play()
-	}
 	for player.IsPlaying() {
 		time.Sleep(time.Millisecond)
 	}
