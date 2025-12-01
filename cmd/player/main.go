@@ -6,10 +6,16 @@ import (
 )
 
 func main() {
-	playlist, err := playlist.DiscoverPaylists()
+	playlists, err := playlist.DiscoverPaylists()
 	if err != nil {
 		fmt.Println("erroare", err)
 		return
 	}
-	fmt.Println(playlist)
+	// dau loop pentru a returna numele la playlisturi si cantecele
+	for _, playlist := range playlists {
+		fmt.Println(playlist.Name)
+		for _, trackname := range playlist.Tracks {
+			fmt.Println(trackname)
+		}
+	}
 }
