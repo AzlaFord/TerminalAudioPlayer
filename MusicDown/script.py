@@ -8,10 +8,10 @@ while done:
         done = False
     else:
         print('Link gresit incerca dinou ')
+# de facut logica la gasirea playlisturi imagini cover de la albumele originale
+# de avut optiunea de alege intre ele 
 
-template = str(input('Introdu un nume Ditrectoriu (sau lasa gol ca default) : '))
-if len(template) == 0:
-    template =' %(playlist)s/%(playlist_index)s - %(title)s.%(ext)s'
+template =' %(playlist)s/%(playlist_index)s - %(title)s.%(ext)s'
 
 command = [
     "yt-dlp",
