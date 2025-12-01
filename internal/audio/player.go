@@ -8,6 +8,32 @@ import (
 	"github.com/hajimehoshi/go-mp3"
 )
 
+var (
+	otoCtx        *oto.Context
+	currentPlayer *oto.Player
+)
+
+func Init() error {
+
+	if otoCtx != nil {
+		return nil
+	}
+
+	op := &oto.NewContextOptions{}
+	op.SampleRate = 44100
+
+	op.ChannelCount = 2
+	op.Format = oto.FormatSignedInt16LE
+	ctx, readyChan, err := oto.NewContext(op)
+	if err != nil {
+		return err
+	}
+	<-readyChan
+	otoCtx = ctx
+	return nil
+
+}
+
 func PlayFile(path string) error {
 
 	file, err := os.ReadFile(path)
@@ -22,17 +48,13 @@ func PlayFile(path string) error {
 		return err
 	}
 
-	op := &oto.NewContextOptions{}
-	op.SampleRate = 44100
-	op.ChannelCount = 2
-	op.Format = oto.FormatSignedInt16LE
-	otoCtx, readyChan, err := oto.NewContext(op)
-	if err != nil {
-		return err
+	if currentPlayer != nil {
+		currentPlayer = nil
 	}
-	<-readyChan
 	player := otoCtx.NewPlayer(decodedMp3)
-	player.Play()
+	currentPlayer = player
+
+	currentPlayer.Play()
 
 	return nil
 }

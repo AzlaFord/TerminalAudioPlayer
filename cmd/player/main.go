@@ -16,7 +16,7 @@ func main() {
 	if err != nil {
 		fmt.Println("erroare", err)
 	}
-
+	audio.Init()
 	for {
 		fmt.Scanln(&cmd)
 		selectedPlaylists := playlists[index]
