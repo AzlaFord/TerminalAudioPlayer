@@ -3,6 +3,8 @@ package ui
 import (
 	"TerminalAudioPlayer/internal/audio"
 	"TerminalAudioPlayer/internal/playlist"
+	"fmt"
+	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -12,7 +14,31 @@ func (m Model) Init() tea.Cmd {
 }
 
 func (m Model) View() string {
-	return "TUI audio player (view not implemented yet)"
+	var b strings.Builder
+
+	fmt.Println(&b)
+
+	for i, pl := range m.playlists {
+		prefix := " "
+		if m.focusOnPlaylist && i == m.selectedPlaylist {
+			prefix = "> "
+		}
+		fmt.Fprintf(&b, "%s%s\n", prefix, pl.Name)
+	}
+
+	fmt.Fprintln(&b, "")
+	fmt.Fprintln(&b, "Tracks :")
+
+	for i, t := range m.tracks {
+		prefix := " "
+		if !m.focusOnPlaylist && i == m.selectedTrack {
+			prefix = "> "
+		}
+		fmt.Fprintf(&b, "%s%s\n", prefix, t.Title)
+	}
+
+	return b.String()
+
 }
 
 type TrackStartingMsg struct {
@@ -43,6 +69,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.selectedTrack < len(m.tracks)-1 && m.focusOnPlaylist == false {
 				m.selectedTrack++
 			}
+		case "q":
+			break
 		case "enter":
 			if m.focusOnPlaylist {
 				if len(m.playlists) == 0 {
