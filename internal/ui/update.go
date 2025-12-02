@@ -70,7 +70,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.selectedTrack++
 			}
 		case "q":
-			break
+			return m, tea.Quit
 		case "enter":
 			if m.focusOnPlaylist {
 				if len(m.playlists) == 0 {
