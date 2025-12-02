@@ -6,8 +6,28 @@ import (
 	"fmt"
 	"strings"
 
+	// "github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
+
+var docStyle = lipgloss.NewStyle().Margin(1)
+
+type item struct {
+	title, desc string
+}
+
+func (i item) Title() string {
+	return i.title
+}
+
+func (i item) Description() string {
+	return i.desc
+}
+
+func (i item) DefaultValue() string {
+	return i.title
+}
 
 func (m Model) Init() tea.Cmd {
 	return nil
@@ -17,24 +37,26 @@ func (m Model) View() string {
 	var b strings.Builder
 
 	fmt.Println(&b)
-
-	for i, pl := range m.playlists {
-		prefix := " "
-		if m.focusOnPlaylist && i == m.selectedPlaylist {
-			prefix = "> "
+	if m.focusOnPlaylist {
+		for i, pl := range m.playlists {
+			prefix := " "
+			if m.focusOnPlaylist && i == m.selectedPlaylist {
+				prefix = ">"
+			}
+			fmt.Fprintf(&b, "%s [%s]\n", prefix, pl.Name)
 		}
-		fmt.Fprintf(&b, "%s%s\n", prefix, pl.Name)
 	}
+	if !m.focusOnPlaylist {
 
-	fmt.Fprintln(&b, "")
-	fmt.Fprintln(&b, "Tracks :")
+		fmt.Fprintln(&b, "Tracks :")
 
-	for i, t := range m.tracks {
-		prefix := " "
-		if !m.focusOnPlaylist && i == m.selectedTrack {
-			prefix = "> "
+		for i, t := range m.tracks {
+			prefix := " "
+			if !m.focusOnPlaylist && i == m.selectedTrack {
+				prefix = ">"
+				fmt.Fprintf(&b, "%s [%s]\n", prefix, t.Title)
+			}
 		}
-		fmt.Fprintf(&b, "%s%s\n", prefix, t.Title)
 	}
 
 	return b.String()
@@ -51,14 +73,16 @@ type TrackErrorMsg struct {
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
+
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "up":
-			if m.selectedPlaylist > 0 {
+
+			if m.selectedPlaylist > 0 && m.focusOnPlaylist {
 				m.selectedPlaylist--
 			}
 		case "down":
-			if m.selectedPlaylist < len(m.playlists)-1 {
+			if m.selectedPlaylist < len(m.playlists)-1 && m.focusOnPlaylist {
 				m.selectedPlaylist++
 			}
 		case "j":
@@ -69,6 +93,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.selectedTrack < len(m.tracks)-1 && m.focusOnPlaylist == false {
 				m.selectedTrack++
 			}
+		case "esc":
+			m.focusOnPlaylist = true
 		case "q":
 			return m, tea.Quit
 		case "enter":
