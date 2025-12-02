@@ -11,7 +11,8 @@ type Model struct {
 	tracks        []playlist.Track
 	selectedTrack int
 
-	status string
+	status          string
+	focusOnPlaylist bool
 }
 
 func NewModel() (Model, error) {
@@ -32,5 +33,6 @@ func NewModel() (Model, error) {
 		tracks:           tracks,
 		selectedTrack:    0,
 		status:           "ready",
+		focusOnPlaylist:  true,
 	}, nil
 }
