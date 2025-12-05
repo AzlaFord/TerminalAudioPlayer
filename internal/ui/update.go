@@ -38,6 +38,8 @@ func (m Model) Init() tea.Cmd {
 
 	m.playListItem.SetItems(items)
 
+	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
+	l.Title = "Playlists"
 	return nil
 }
 
