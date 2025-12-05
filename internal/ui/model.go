@@ -2,6 +2,7 @@ package ui
 
 import (
 	"TerminalAudioPlayer/internal/playlist"
+	"fmt"
 
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
@@ -50,7 +51,7 @@ func NewModel() (Model, error) {
 	}
 
 	for _, pl := range listPl {
-		items = append(items, item{title: pl.Name})
+		items = append(items, item{title: pl.Name, desc: fmt.Sprintf("%d tracks", len(pl.Tracks))})
 	}
 
 	l := list.New(items, list.NewDefaultDelegate(), 0, 0)

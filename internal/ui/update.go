@@ -4,44 +4,11 @@ import (
 	"TerminalAudioPlayer/internal/audio"
 	"TerminalAudioPlayer/internal/playlist"
 
-	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
 
 var docStyle = lipgloss.NewStyle().Margin(1)
-
-type item struct {
-	title, desc string
-}
-
-func (i item) Title() string {
-	return i.title
-}
-
-func (i item) Description() string {
-	return i.desc
-}
-
-func (i item) FilterValue() string {
-	return i.title
-}
-
-func (m Model) Init() tea.Cmd {
-	plist, _ := playlist.DiscoverPlaylists()
-
-	var items []list.Item
-
-	for _, pl := range plist {
-		items = append(items, item{title: pl.Name})
-	}
-
-	m.playListItem.SetItems(items)
-
-	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
-	l.Title = "Playlists"
-	return nil
-}
 
 func (m Model) View() string {
 	if m.focusOnPlaylist {
