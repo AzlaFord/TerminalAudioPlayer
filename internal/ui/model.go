@@ -31,19 +31,9 @@ func NewModel() (Model, error) {
 		tracks = listPl[0].Tracks
 	}
 
-	playlistItems := playlistToItems(listPl)
-	playlistList := list.New(playlistItems, list.NewDefaultDelegate(), 0, 0)
-	playlistList.Title = "Playlists"
-
-	trackItems := tracksToItems(tracks)
-	trackList := list.New(trackItems, list.NewDefaultDelegate(), 0, 0)
-	trackList.Title = "Tracks"
-
 	return Model{
 		playlists:        listPl,
 		tracks:           tracks,
-		playlistList:     playlistList,
-		trackList:        trackList,
 		selectedPlaylist: 0,
 		selectedTrack:    0,
 		status:           "ready",
