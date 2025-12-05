@@ -3,6 +3,7 @@ package ui
 import (
 	"TerminalAudioPlayer/internal/playlist"
 	"fmt"
+	"strconv"
 
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
@@ -53,7 +54,8 @@ func NewModel() (Model, error) {
 	// incarca playlisturile in playlistItem
 
 	for idx, pl := range listPl {
-		items = append(items, item{title: pl.Name, desc: " ", index: idx})
+		length := "Tracks " + strconv.Itoa(len(pl.Tracks))
+		items = append(items, item{title: pl.Name, desc: length, index: idx})
 	}
 
 	// incarca playlisturile in trackList
