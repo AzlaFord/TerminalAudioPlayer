@@ -4,7 +4,6 @@ import (
 	"TerminalAudioPlayer/internal/playlist"
 	"fmt"
 	"io"
-	"os"
 	"strconv"
 	"strings"
 
@@ -64,30 +63,24 @@ func (i item) FilterValue() string {
 func (m Model) Init() tea.Cmd {
 	return nil
 }
-func NewTable() (Model, error) {
 
+func NewTable(tracks []playlist.Track) table.Model {
 	columns := []table.Column{
 		{Title: "Order", Width: 4},
 		{Title: "Title", Width: 12},
-		{Title: "Length", Width: 10},
+		{Title: "Location", Width: 10},
 	}
+
 	var rows []table.Row
-	var tracks []playlist.Track
-	listPl, err := playlist.DiscoverPlaylists()
-
-	if err != nil {
-		return Model{}, err
-	}
-
 	for i, song := range tracks {
-		idx := strconv.Itoa(i)
+		idx := strconv.Itoa(i + 1)
 		rows = append(rows, table.Row{idx, song.Title, song.Path})
 	}
 
 	t := table.New(
 		table.WithColumns(columns),
 		table.WithRows(rows),
-		table.WithFocused(true),
+		table.WithFocused(false),
 		table.WithHeight(7),
 	)
 
@@ -103,14 +96,9 @@ func NewTable() (Model, error) {
 		Bold(false)
 	t.SetStyles(s)
 
-	m := Model{t}
-	if _, err := tea.NewProgram(m).Run(); err != nil {
-		fmt.Println("Error running program:", err)
-		os.Exit(1)
-	}
-
-	return Model{}, nil
+	return t
 }
+
 func NewModel() (Model, error) {
 
 	listPl, err := playlist.DiscoverPlaylists()
@@ -120,25 +108,23 @@ func NewModel() (Model, error) {
 	if err != nil {
 		return Model{}, err
 	}
-	// incarca playlisturile in playlistItem
 
+	// incarca playlisturile in playlistItem
 	for _, pl := range listPl {
 		length := "Tracks " + strconv.Itoa(len(pl.Tracks))
 		items = append(items, item{title: pl.Name, desc: length})
+		tracks = append(tracks, pl.Tracks...)
 	}
 
-	// incarca playlisturile in trackList
-	for _, pl := range tracks {
-		fmt.Println(pl.Title)
-	}
 	const defaultWidth = 20
-
 	l := list.New(items, itemDelegate{}, defaultWidth, listHeight)
 	l.Title = "Playlists"
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(false)
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
+
+	tbl := NewTable(tracks)
 
 	if len(listPl) > 0 {
 		tracks = listPl[0].Tracks
@@ -150,6 +136,7 @@ func NewModel() (Model, error) {
 		status:          "ready",
 		focusOnPlaylist: true,
 		playListItem:    l,
+		table:           tbl,
 	}, nil
 }
 
