@@ -4,16 +4,40 @@ import (
 	"TerminalAudioPlayer/internal/playlist"
 	"fmt"
 	"io"
+	"os"
 	"strconv"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/list"
+	"github.com/charmbracelet/bubbles/table"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
 
+type Model struct {
+	playlists        []playlist.Playlist
+	selectedPlaylist int
+	playListItem     list.Model
+	trackList        list.Model
+	table            table.Model
+	tracks           []playlist.Track
+	selectedTrack    int
+
+	status          string
+	focusOnPlaylist bool
+}
+
+type item struct {
+	title, desc string
+	index       int
+}
+
+var baseStyle = lipgloss.NewStyle().
+	BorderStyle(lipgloss.NormalBorder()).
+	BorderForeground(lipgloss.Color("240"))
+
 var (
-	titleStyle        = lipgloss.NewStyle().MarginLeft(2)
 	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
 	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
 	paginationStyle   = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
@@ -22,11 +46,6 @@ var (
 )
 
 const listHeight = 14
-
-type item struct {
-	title, desc string
-	index       int
-}
 
 type itemDelegate struct{}
 
@@ -45,22 +64,55 @@ func (i item) FilterValue() string {
 func (m Model) Init() tea.Cmd {
 	return nil
 }
+func NewTable() (Model, error) {
 
-type Model struct {
-	playlists        []playlist.Playlist
-	selectedPlaylist int
-	playListItem     list.Model
-	trackList        list.Model
+	columns := []table.Column{
+		{Title: "Order", Width: 4},
+		{Title: "Title", Width: 12},
+		{Title: "Length", Width: 10},
+	}
+	var rows []table.Row
+	var tracks []playlist.Track
+	listPl, err := playlist.DiscoverPlaylists()
 
-	tracks        []playlist.Track
-	selectedTrack int
+	if err != nil {
+		return Model{}, err
+	}
 
-	status          string
-	focusOnPlaylist bool
-	choice          string
+	for i, song := range tracks {
+		idx := strconv.Itoa(i)
+		rows = append(rows, table.Row{idx, song.Title, song.Path})
+	}
+
+	t := table.New(
+		table.WithColumns(columns),
+		table.WithRows(rows),
+		table.WithFocused(true),
+		table.WithHeight(7),
+	)
+
+	s := table.DefaultStyles()
+	s.Header = s.Header.
+		BorderStyle(lipgloss.NormalBorder()).
+		BorderForeground(lipgloss.Color("240")).
+		BorderBottom(true).
+		Bold(false)
+	s.Selected = s.Selected.
+		Foreground(lipgloss.Color("229")).
+		Background(lipgloss.Color("57")).
+		Bold(false)
+	t.SetStyles(s)
+
+	m := Model{t}
+	if _, err := tea.NewProgram(m).Run(); err != nil {
+		fmt.Println("Error running program:", err)
+		os.Exit(1)
+	}
+
+	return Model{}, nil
 }
-
 func NewModel() (Model, error) {
+
 	listPl, err := playlist.DiscoverPlaylists()
 	var tracks []playlist.Track
 	var items []list.Item
@@ -85,7 +137,6 @@ func NewModel() (Model, error) {
 	l.Title = "Playlists"
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(false)
-	l.Styles.Title = titleStyle
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
 
