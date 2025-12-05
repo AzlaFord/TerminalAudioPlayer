@@ -10,6 +10,7 @@ import (
 
 type item struct {
 	title, desc string
+	index       int
 }
 
 func (i item) Title() string {
@@ -49,11 +50,16 @@ func NewModel() (Model, error) {
 	if err != nil {
 		return Model{}, err
 	}
+	// incarca playlisturile in playlistItem
 
-	for _, pl := range listPl {
-		items = append(items, item{title: pl.Name, desc: fmt.Sprintf("%d tracks", len(pl.Tracks))})
+	for idx, pl := range listPl {
+		items = append(items, item{title: pl.Name, desc: " ", index: idx})
 	}
 
+	// incarca playlisturile in trackList
+	for _, pl := range tracks {
+		fmt.Println(pl.Title)
+	}
 	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
 	l.Title = "Playlists"
 
