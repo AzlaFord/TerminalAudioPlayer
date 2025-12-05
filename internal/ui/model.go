@@ -9,7 +9,7 @@ import (
 type Model struct {
 	playlists        []playlist.Playlist
 	selectedPlaylist int
-	playlistList     list.Model
+	playListItem     list.Model
 	trackList        list.Model
 
 	tracks        []playlist.Track
@@ -32,11 +32,9 @@ func NewModel() (Model, error) {
 	}
 
 	return Model{
-		playlists:        listPl,
-		tracks:           tracks,
-		selectedPlaylist: 0,
-		selectedTrack:    0,
-		status:           "ready",
-		focusOnPlaylist:  true,
+		playlists:       listPl,
+		tracks:          tracks,
+		status:          "ready",
+		focusOnPlaylist: true,
 	}, nil
 }

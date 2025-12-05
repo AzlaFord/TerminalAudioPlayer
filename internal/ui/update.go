@@ -3,8 +3,6 @@ package ui
 import (
 	"TerminalAudioPlayer/internal/audio"
 	"TerminalAudioPlayer/internal/playlist"
-	"fmt"
-	"strings"
 
 	// "github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
@@ -25,42 +23,33 @@ func (i item) Description() string {
 	return i.desc
 }
 
-func (i item) DefaultValue() string {
+func (i item) FilterValue() string {
 	return i.title
 }
 
 func (m Model) Init() tea.Cmd {
+	plist , _ := playlist.DiscoverPlaylists()
+
+	var items [] m.playListItem.Item
+	
+	for _,pl := range plist{
+		items = append (items,m.playlists{title:pl.Name})
+	}
+
+	m.playListItem.SetItems(items)
+	
 	return nil
 }
 
 func (m Model) View() string {
-	var b strings.Builder
-
-	fmt.Println(&b)
 	if m.focusOnPlaylist {
-		for i, pl := range m.playlists {
-			prefix := " "
-			if m.focusOnPlaylist && i == m.selectedPlaylist {
-				prefix = ">"
-			}
-			fmt.Fprintf(&b, "%s [%s]\n", prefix, pl.Name)
-		}
+		return docStyle.Render(m.playListItem.View())
 	}
 	if !m.focusOnPlaylist {
-
-		fmt.Fprintln(&b, "Tracks :")
-
-		for i, t := range m.tracks {
-			prefix := " "
-			if !m.focusOnPlaylist && i == m.selectedTrack {
-				prefix = ">"
-				fmt.Fprintf(&b, "%s [%s]\n", prefix, t.Title)
-			}
-		}
+		return docStyle.Render(m.trackList.View())
 	}
 
-	return b.String()
-
+	return "ceva"
 }
 
 type TrackStartingMsg struct {
@@ -116,7 +105,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	}
-	return m, nil
+	var cmd tea.Cmd
+	m.playlistList, cmd = m.playlistList.Update(msg)
+	return m, cmd
 }
 
 func playTrackCmd(t playlist.Track) tea.Cmd {
