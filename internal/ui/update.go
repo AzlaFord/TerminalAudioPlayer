@@ -11,7 +11,13 @@ import (
 var docStyle = lipgloss.NewStyle().Margin(1)
 
 func (m Model) View() string {
-	return docStyle.Render(m.playListItem.View())
+
+	if m.focusOnPlaylist {
+		return docStyle.Render(m.playListItem.View())
+	} else {
+		return docStyle.Render(m.trackList.View())
+	}
+
 }
 
 type TrackStartingMsg struct {
@@ -27,11 +33,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "esc":
+		case "e":
 			m.focusOnPlaylist = true
 		case "q":
 			return m, tea.Quit
+		case "enter":
+			m.focusOnPlaylist = false
 		}
+
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
 		m.playListItem.SetSize(msg.Width-h, msg.Height-v)

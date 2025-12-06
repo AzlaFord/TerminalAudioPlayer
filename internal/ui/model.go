@@ -65,8 +65,7 @@ func (m Model) Init() tea.Cmd {
 }
 
 func NewTable(tracks []playlist.Track) table.Model {
-	columns := []table.Column{
-		{Title: "Order", Width: 4},
+	columns := []table.Column{{Title: "Order", Width: 4},
 		{Title: "Title", Width: 12},
 		{Title: "Location", Width: 10},
 	}
@@ -85,15 +84,8 @@ func NewTable(tracks []playlist.Track) table.Model {
 	)
 
 	s := table.DefaultStyles()
-	s.Header = s.Header.
-		BorderStyle(lipgloss.NormalBorder()).
-		BorderForeground(lipgloss.Color("240")).
-		BorderBottom(true).
-		Bold(false)
-	s.Selected = s.Selected.
-		Foreground(lipgloss.Color("229")).
-		Background(lipgloss.Color("57")).
-		Bold(false)
+	s.Header = s.Header.BorderStyle(lipgloss.NormalBorder()).BorderForeground(lipgloss.Color("240")).BorderBottom(true).Bold(false)
+	s.Selected = s.Selected.Foreground(lipgloss.Color("229")).Background(lipgloss.Color("57")).Bold(false)
 	t.SetStyles(s)
 
 	return t
@@ -113,7 +105,6 @@ func NewModel() (Model, error) {
 	for _, pl := range listPl {
 		length := "Tracks " + strconv.Itoa(len(pl.Tracks))
 		items = append(items, item{title: pl.Name, desc: length})
-		tracks = append(tracks, pl.Tracks...)
 	}
 
 	const defaultWidth = 20
@@ -124,11 +115,11 @@ func NewModel() (Model, error) {
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
 
-	tbl := NewTable(tracks)
-
 	if len(listPl) > 0 {
 		tracks = listPl[0].Tracks
 	}
+
+	tbl := NewTable(tracks)
 
 	return Model{
 		playlists:       listPl,
