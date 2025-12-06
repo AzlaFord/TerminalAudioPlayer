@@ -54,8 +54,8 @@ func (p *Player) SetVolume(volume float64) error {
 		return errors.New("nu exista playerul")
 	}
 
-	if volume > 1 {
-		volume = 1
+	if volume > 100 {
+		volume = 100
 	}
 
 	if volume < 0 {
