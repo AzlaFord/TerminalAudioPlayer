@@ -9,14 +9,15 @@ import (
 	"github.com/hajimehoshi/go-mp3"
 )
 
-var (
+type Player struct {
 	otoCtx        *oto.Context
 	currentPlayer *oto.Player
-)
+	volume        float64
+}
 
-func Init() error {
+func (p *Player) Init() error {
 
-	if otoCtx != nil {
+	if p.otoCtx != nil {
 		return nil
 	}
 
@@ -30,29 +31,43 @@ func Init() error {
 		return err
 	}
 	<-readyChan
-	otoCtx = ctx
+	p.otoCtx = ctx
 	return nil
 
 }
 
-func SetVolume(volume float64) error {
+func (p *Player) GetVolume() float64 {
+	return p.volume
+}
 
-	if currentPlayer == nil {
+func (p *Player) IncreaseVolume(step float64) {
+	p.SetVolume(p.GetVolume() + step)
+}
+
+func (p *Player) DecreaseVolume(step float64) {
+	p.SetVolume(p.GetVolume() - step)
+}
+
+func (p *Player) SetVolume(volume float64) error {
+
+	if p.currentPlayer == nil {
 		return errors.New("nu exista playerul")
 	}
-	if volume >= 0 && volume <= 100 {
-		currentPlayer.SetVolume(volume / 100)
+
+	if volume > 1 {
+		volume = 1
 	}
-	if volume > 100 {
-		currentPlayer.SetVolume(1)
-	}
+
 	if volume < 0 {
-		currentPlayer.SetVolume(0)
+		volume = 0
 	}
+
+	p.volume = volume / 100
+	p.currentPlayer.SetVolume(p.volume)
 	return nil
 }
 
-func PlayFile(path string) error {
+func (p *Player) PlayFile(path string) error {
 
 	file, err := os.ReadFile(path)
 	if err != nil {
@@ -66,13 +81,13 @@ func PlayFile(path string) error {
 		return err
 	}
 
-	if currentPlayer != nil {
-		currentPlayer = nil
+	if p.currentPlayer != nil {
+		p.currentPlayer = nil
 	}
-	player := otoCtx.NewPlayer(decodedMp3)
-	currentPlayer = player
+	player := p.otoCtx.NewPlayer(decodedMp3)
+	p.currentPlayer = player
 
-	currentPlayer.Play()
+	p.currentPlayer.Play()
 
 	return nil
 }

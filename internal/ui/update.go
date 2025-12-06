@@ -28,7 +28,7 @@ type TrackErrorMsg struct {
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-
+	volume := 100.0
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 
@@ -42,6 +42,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			m.focusOnPlaylist = false
 			m.table.Focus()
+		case "=":
+			audio.SetVolume(volume)
+		case "-":
+			audio.SetVolume(volume)
 		case "r":
 			if len(m.tracks) == 0 {
 				break
