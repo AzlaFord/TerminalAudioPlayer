@@ -15,9 +15,8 @@ func (m Model) View() string {
 	if m.focusOnPlaylist {
 		return docStyle.Render(m.playListItem.View())
 	} else {
-		return docStyle.Render(m.trackList.View())
+		return baseStyle.Render(m.table.View()) + "\n"
 	}
-
 }
 
 type TrackStartingMsg struct {
@@ -47,6 +46,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 	var cmd tea.Cmd
 	m.playListItem, cmd = m.playListItem.Update(msg)
+	m.table, cmd = m.table.Update(msg)
 	return m, cmd
 }
 
