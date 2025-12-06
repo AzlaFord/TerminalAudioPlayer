@@ -15,7 +15,7 @@ while done:
 # de facut logica la gasirea playlisturi imagini cover de la albumele originale
 # de avut optiunea de alege intre ele 
 
-template =' %(playlist)s/%(playlist_index)s - %(title)s.%(ext)s'
+template =' %(playlist)s/%(title)s.%(ext)s'
 
 command = [
     "yt-dlp",
