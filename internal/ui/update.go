@@ -34,10 +34,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "e":
 			m.focusOnPlaylist = true
+			m.table.Blur()
 		case "q":
 			return m, tea.Quit
 		case "enter":
 			m.focusOnPlaylist = false
+			m.table.Focus()
+
 		}
 
 	case tea.WindowSizeMsg:
@@ -45,8 +48,19 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.playListItem.SetSize(msg.Width-h, msg.Height-v)
 	}
 	var cmd tea.Cmd
-	m.playListItem, cmd = m.playListItem.Update(msg)
-	m.table, cmd = m.table.Update(msg)
+
+	if m.focusOnPlaylist {
+		m.playListItem, cmd = m.playListItem.Update(msg)
+		idx := m.playListItem.Index()
+		if idx != m.selectedPlaylist {
+			m.selectedPlaylist = idx
+			m.tracks = m.playlists[idx].Tracks
+			m.table = NewTable(m.tracks)
+		}
+
+	} else {
+		m.table, cmd = m.table.Update(msg)
+	}
 	return m, cmd
 }
 
