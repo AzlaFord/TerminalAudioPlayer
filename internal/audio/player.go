@@ -2,6 +2,7 @@ package audio
 
 import (
 	"bytes"
+	"errors"
 	"os"
 
 	"github.com/ebitengine/oto/v3"
@@ -32,6 +33,23 @@ func Init() error {
 	otoCtx = ctx
 	return nil
 
+}
+
+func SetVolume(volume float64) error {
+
+	if currentPlayer == nil {
+		return errors.New("nu exista playerul")
+	}
+	if volume >= 0 && volume <= 100 {
+		currentPlayer.SetVolume(volume / 100)
+	}
+	if volume > 100 {
+		currentPlayer.SetVolume(1)
+	}
+	if volume < 0 {
+		currentPlayer.SetVolume(0)
+	}
+	return nil
 }
 
 func PlayFile(path string) error {
