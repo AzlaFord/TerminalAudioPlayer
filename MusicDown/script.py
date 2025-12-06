@@ -16,7 +16,7 @@ while done:
 # de avut optiunea de alege intre ele 
 
 template ='%(playlist)s/%(title)s.%(ext)s'
-
+# de rezolvat problema cu - intre cuvinte 
 command = [
     "yt-dlp",
     "-o", template,

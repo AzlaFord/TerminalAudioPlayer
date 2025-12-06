@@ -3,6 +3,7 @@ package playlist
 import (
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // Deci lista de cantece in Playlist
@@ -63,9 +64,10 @@ func DiscoverPlaylists() ([]Playlist, error) {
 			var extension = filepath.Ext(trackData.Name())
 			switch extension {
 			case ".mp3", ".wav", ".webm", ".ogg":
+				clean := strings.TrimSuffix(trackData.Name(), filepath.Ext(trackData.Name()))
 				tracks := Track{
 					Path:          pathTrackData,
-					Title:         trackData.Name(),
+					Title:         clean,
 					PlaylistTitle: file.Name(),
 				}
 				tracksInThisPlayList = append(tracksInThisPlayList, tracks)

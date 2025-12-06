@@ -64,8 +64,8 @@ func (m Model) Init() tea.Cmd {
 
 func NewTable(tracks []playlist.Track) table.Model {
 	columns := []table.Column{{Title: "Order", Width: 10},
-		{Title: "Title", Width: 22},
-		{Title: "Playlist", Width: 20},
+		{Title: "Title", Width: 35},
+		{Title: "Playlist", Width: 15},
 		{Title: "Duration", Width: 9},
 	}
 
