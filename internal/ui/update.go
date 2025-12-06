@@ -22,12 +22,14 @@ func (m Model) View() string {
 type TrackStartingMsg struct {
 	Title string
 }
+
 type TrackErrorMsg struct {
 	Err error
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
+	var cmd tea.Cmd
 	switch msg := msg.(type) {
 
 	case tea.KeyMsg:
@@ -40,12 +42,24 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			m.focusOnPlaylist = false
 			m.table.Focus()
+		case "r":
+			if len(m.tracks) == 0 {
+				break
+			}
+			if !m.focusOnPlaylist {
+				idx := m.table.Cursor()
+				if idx >= 0 && idx < len(m.tracks) {
+					tracks := m.tracks[idx]
+					return m, playTrackCmd(tracks)
+				}
+
+			}
+
 		}
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
 		m.playListItem.SetSize(msg.Width-h, msg.Height-v)
 	}
-	var cmd tea.Cmd
 
 	if m.focusOnPlaylist {
 		m.playListItem, cmd = m.playListItem.Update(msg)
@@ -57,7 +71,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.table = NewTable(m.tracks)
 			}
 		}
-
 	} else {
 		m.table, cmd = m.table.Update(msg)
 	}
@@ -66,7 +79,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func playTrackCmd(t playlist.Track) tea.Cmd {
 	return func() tea.Msg {
-
 		err := audio.PlayFile(t.Path)
 		if err != nil {
 			return TrackErrorMsg{Err: err}

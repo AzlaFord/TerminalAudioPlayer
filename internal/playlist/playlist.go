@@ -11,6 +11,7 @@ type Track struct {
 	Path          string
 	Title         string
 	PlaylistTitle string
+	Duration      float64
 }
 
 // Lista de Playlisturi in Home/User/Music fiecare fisier in Music e socotit ca Playlist
