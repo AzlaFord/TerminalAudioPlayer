@@ -72,7 +72,7 @@ func NewTable(tracks []playlist.Track) table.Model {
 	var rows []table.Row
 	for i, song := range tracks {
 		idx := strconv.Itoa(i + 1)
-		rows = append(rows, table.Row{idx, song.Title, song.Path})
+		rows = append(rows, table.Row{idx, song.Title, song.PlaylistTitle, "3"})
 	}
 
 	t := table.New(

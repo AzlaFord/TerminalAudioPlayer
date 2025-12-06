@@ -8,8 +8,9 @@ import (
 // Deci lista de cantece in Playlist
 
 type Track struct {
-	Path  string
-	Title string
+	Path          string
+	Title         string
+	PlaylistTitle string
 }
 
 // Lista de Playlisturi in Home/User/Music fiecare fisier in Music e socotit ca Playlist
@@ -62,8 +63,9 @@ func DiscoverPlaylists() ([]Playlist, error) {
 			switch extension {
 			case ".mp3", ".wav", ".webm", ".ogg":
 				tracks := Track{
-					Path:  pathTrackData,
-					Title: trackData.Name(),
+					Path:          pathTrackData,
+					Title:         trackData.Name(),
+					PlaylistTitle: file.Name(),
 				}
 				tracksInThisPlayList = append(tracksInThisPlayList, tracks)
 			default:
