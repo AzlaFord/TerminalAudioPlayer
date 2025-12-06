@@ -32,9 +32,7 @@ type item struct {
 	index       int
 }
 
-var baseStyle = lipgloss.NewStyle().
-	BorderStyle(lipgloss.NormalBorder()).
-	BorderForeground(lipgloss.Color("240"))
+var baseStyle = lipgloss.NewStyle().BorderStyle(lipgloss.NormalBorder()).BorderForeground(lipgloss.Color("240"))
 
 var (
 	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
@@ -44,7 +42,7 @@ var (
 	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
 )
 
-const listHeight = 14
+const listHeight = 20
 
 type itemDelegate struct{}
 
@@ -65,9 +63,10 @@ func (m Model) Init() tea.Cmd {
 }
 
 func NewTable(tracks []playlist.Track) table.Model {
-	columns := []table.Column{{Title: "Order", Width: 4},
-		{Title: "Title", Width: 12},
-		{Title: "Location", Width: 10},
+	columns := []table.Column{{Title: "Order", Width: 10},
+		{Title: "Title", Width: 22},
+		{Title: "Playlist", Width: 20},
+		{Title: "Duration", Width: 9},
 	}
 
 	var rows []table.Row
@@ -80,7 +79,7 @@ func NewTable(tracks []playlist.Track) table.Model {
 		table.WithColumns(columns),
 		table.WithRows(rows),
 		table.WithFocused(false),
-		table.WithHeight(7),
+		table.WithHeight(20),
 	)
 
 	s := table.DefaultStyles()
@@ -115,6 +114,7 @@ func NewModel() (Model, error) {
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
 
+	// verific daca lista exista macar si iau primul element adica lista cu cantece
 	if len(listPl) > 0 {
 		tracks = listPl[0].Tracks
 	}

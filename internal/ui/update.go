@@ -40,9 +40,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			m.focusOnPlaylist = false
 			m.table.Focus()
-
 		}
-
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
 		m.playListItem.SetSize(msg.Width-h, msg.Height-v)
@@ -54,8 +52,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		idx := m.playListItem.Index()
 		if idx != m.selectedPlaylist {
 			m.selectedPlaylist = idx
-			m.tracks = m.playlists[idx].Tracks
-			m.table = NewTable(m.tracks)
+			if idx >= 0 && idx < len(m.playlists) {
+				m.tracks = m.playlists[idx].Tracks
+				m.table = NewTable(m.tracks)
+			}
 		}
 
 	} else {
