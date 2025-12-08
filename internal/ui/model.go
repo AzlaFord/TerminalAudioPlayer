@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"TerminalAudioPlayer/internal/audio"
 	"TerminalAudioPlayer/internal/playlist"
 	"fmt"
 	"io"
@@ -23,6 +24,7 @@ type Model struct {
 	tracks           []playlist.Track
 	selectedTrack    int
 
+	player          *audio.Player
 	status          string
 	focusOnPlaylist bool
 }
@@ -90,7 +92,7 @@ func NewTable(tracks []playlist.Track) table.Model {
 	return t
 }
 
-func NewModel() (Model, error) {
+func NewModel(player *audio.Player) (Model, error) {
 
 	listPl, err := playlist.DiscoverPlaylists()
 	var tracks []playlist.Track
@@ -128,6 +130,7 @@ func NewModel() (Model, error) {
 		focusOnPlaylist: true,
 		playListItem:    l,
 		table:           tbl,
+		player:          player,
 	}, nil
 }
 

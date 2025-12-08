@@ -1,7 +1,6 @@
 package ui
 
 import (
-	"TerminalAudioPlayer/internal/audio"
 	"TerminalAudioPlayer/internal/playlist"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -29,7 +28,7 @@ type TrackErrorMsg struct {
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
-	step := audio.Player{Volume: 100.0}
+	step := m.player
 
 	switch msg := msg.(type) {
 
@@ -55,7 +54,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				idx := m.table.Cursor()
 				if idx >= 0 && idx < len(m.tracks) {
 					tracks := m.tracks[idx]
-					return m, playTrackCmd(tracks)
+					return m, m.playTrackCmd(tracks)
 				}
 
 			}
@@ -82,10 +81,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func playTrackCmd(t playlist.Track) tea.Cmd {
+func (m Model) playTrackCmd(t playlist.Track) tea.Cmd {
+
+	p := m.player
 
 	return func() tea.Msg {
-		err := audio.PlayFile(t.Path)
+		err := p.PlayFile(t.Path)
 		if err != nil {
 			return TrackErrorMsg{Err: err}
 		}
