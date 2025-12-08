@@ -94,3 +94,10 @@ func (p *Player) PlayFile(path string) error {
 
 	return nil
 }
+
+func (p *Player) Pause() {
+	if p.currentPlayer == nil {
+		return
+	}
+	p.currentPlayer.Pause()
+}

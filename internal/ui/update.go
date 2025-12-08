@@ -46,6 +46,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.table.Focus()
 		case "=":
 			step.IncreaseVolume(0.05)
+		case "p":
+			step.Pause()
 		case "-":
 			step.DecreaseVolume(0.05)
 		case "r":
