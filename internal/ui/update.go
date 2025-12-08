@@ -10,9 +10,11 @@ import (
 var docStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("111")).MarginTop(1).BorderStyle(lipgloss.ASCIIBorder())
 
 func (m Model) View() string {
-
+	style := lipgloss.NewStyle().Foreground(lipgloss.ANSIColor(11)).Background(lipgloss.Color("91"))
+	styled := style.Render("TUI Music Player")
+	block := lipgloss.Place(30, 80, lipgloss.Center, lipgloss.Bottom, styled)
 	if m.focusOnPlaylist {
-		return docStyle.Render(m.playListItem.View())
+		return block + docStyle.Render(m.playListItem.View())
 	} else {
 		return baseStyle.Render(m.table.View()) + "\n"
 	}
