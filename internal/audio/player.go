@@ -2,7 +2,6 @@ package audio
 
 import (
 	"bytes"
-	"errors"
 	"os"
 
 	"github.com/ebitengine/oto/v3"
@@ -50,10 +49,11 @@ func (p *Player) DecreaseVolume(step float64) {
 }
 
 // seteaza volumul apelat in DecreseVolume si IncreaseVolume
+// volume e practic rezultatul la default volume + sau - la step
 func (p *Player) SetVolume(volume float64) error {
 
 	if p.currentPlayer == nil {
-		return errors.New("nu exista playerul")
+		p.Volume = volume
 	}
 
 	if volume > 1.0 {
@@ -63,6 +63,7 @@ func (p *Player) SetVolume(volume float64) error {
 	if volume < 0.0 {
 		volume = 0
 	}
+
 	p.Volume = volume
 	p.currentPlayer.SetVolume(p.Volume)
 	return nil
@@ -87,6 +88,7 @@ func (p *Player) PlayFile(path string) error {
 	}
 	player := p.otoCtx.NewPlayer(decodedMp3)
 	p.currentPlayer = player
+	p.currentPlayer.SetVolume(p.Volume)
 
 	p.currentPlayer.Play()
 
