@@ -43,9 +43,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.focusOnPlaylist = false
 			m.table.Focus()
 		case "=":
-			step.IncreaseVolume(5)
+			step.IncreaseVolume(0.05)
 		case "-":
-			step.DecreaseVolume(5)
+			step.DecreaseVolume(0.05)
 		case "r":
 			if len(m.tracks) == 0 {
 				break

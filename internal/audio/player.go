@@ -17,7 +17,7 @@ type Player struct {
 
 func NewPlayer() (*Player, error) {
 
-	p := &Player{Volume: 100.0}
+	p := &Player{Volume: 1.0}
 
 	op := &oto.NewContextOptions{}
 	op.SampleRate = 44100
@@ -56,15 +56,14 @@ func (p *Player) SetVolume(volume float64) error {
 		return errors.New("nu exista playerul")
 	}
 
-	if volume > 100 {
-		volume = 100
+	if volume > 1.0 {
+		volume = 1.0
 	}
 
-	if volume < 0 {
+	if volume < 0.0 {
 		volume = 0
 	}
-
-	p.Volume = volume / 100
+	p.Volume = volume
 	p.currentPlayer.SetVolume(p.Volume)
 	return nil
 }
