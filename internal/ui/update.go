@@ -36,7 +36,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "e":
+		case "esc":
+			// de rezolvat problema esc da crash
 			m.focusOnPlaylist = true
 			m.table.Blur()
 		case "q":
@@ -46,7 +47,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.table.Focus()
 		case "=":
 			step.IncreaseVolume(0.05)
-		case "p":
+		case "space":
+			// de rezolvat problema cu space la pauza
 			step.Pause()
 		case "-":
 			step.DecreaseVolume(0.05)
