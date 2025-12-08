@@ -12,14 +12,12 @@ import (
 type Player struct {
 	otoCtx        *oto.Context
 	currentPlayer *oto.Player
-	volume        float64
+	Volume        float64
 }
 
-func (p *Player) Init() error {
+func NewPlayer() (*Player, error) {
 
-	if p.otoCtx != nil {
-		return nil
-	}
+	p := &Player{Volume: 100.0}
 
 	op := &oto.NewContextOptions{}
 	op.SampleRate = 44100
@@ -28,26 +26,30 @@ func (p *Player) Init() error {
 	op.Format = oto.FormatSignedInt16LE
 	ctx, readyChan, err := oto.NewContext(op)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	<-readyChan
 	p.otoCtx = ctx
-	return nil
+	return p, nil
 
 }
 
+// ia volumul
 func (p *Player) GetVolume() float64 {
-	return p.volume
+	return p.Volume
 }
 
+// cresterea volumului
 func (p *Player) IncreaseVolume(step float64) {
 	p.SetVolume(p.GetVolume() + step)
 }
 
+// scaderea volumului
 func (p *Player) DecreaseVolume(step float64) {
 	p.SetVolume(p.GetVolume() - step)
 }
 
+// seteaza volumul apelat in DecreseVolume si IncreaseVolume
 func (p *Player) SetVolume(volume float64) error {
 
 	if p.currentPlayer == nil {
@@ -62,8 +64,8 @@ func (p *Player) SetVolume(volume float64) error {
 		volume = 0
 	}
 
-	p.volume = volume / 100
-	p.currentPlayer.SetVolume(p.volume)
+	p.Volume = volume / 100
+	p.currentPlayer.SetVolume(p.Volume)
 	return nil
 }
 

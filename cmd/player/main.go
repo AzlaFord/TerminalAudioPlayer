@@ -10,9 +10,12 @@ import (
 
 func main() {
 
-	audio.Init()
+	player, err := audio.NewPlayer()
+	if err != nil {
+		fmt.Println("eroare new Player")
+	}
 
-	m, err := ui.NewModel()
+	m, err := ui.NewModel(player)
 	if err != nil {
 		fmt.Println("erroare", err)
 	}
