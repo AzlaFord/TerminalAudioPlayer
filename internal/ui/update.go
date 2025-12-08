@@ -7,7 +7,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-var docStyle = lipgloss.NewStyle().Margin(1)
+var docStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("111")).MarginTop(1).BorderStyle(lipgloss.ASCIIBorder())
 
 func (m Model) View() string {
 

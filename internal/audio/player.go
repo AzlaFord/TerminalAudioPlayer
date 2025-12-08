@@ -86,10 +86,10 @@ func (p *Player) PlayFile(path string) error {
 	if p.currentPlayer != nil {
 		p.currentPlayer = nil
 	}
+
 	player := p.otoCtx.NewPlayer(decodedMp3)
 	p.currentPlayer = player
 	p.currentPlayer.SetVolume(p.Volume)
-
 	p.currentPlayer.Play()
 
 	return nil

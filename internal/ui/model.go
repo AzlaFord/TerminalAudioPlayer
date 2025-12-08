@@ -35,10 +35,9 @@ type item struct {
 }
 
 var baseStyle = lipgloss.NewStyle().BorderStyle(lipgloss.NormalBorder()).BorderForeground(lipgloss.Color("240"))
-
 var (
 	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
-	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
+	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170")).Background(lipgloss.Color("111"))
 	paginationStyle   = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
 	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
 	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
@@ -146,6 +145,7 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 	str := fmt.Sprintf("%d. %s %s ", index+1, i.title, i.desc)
 
 	fn := itemStyle.Render
+
 	if index == m.Index() {
 		fn = func(s ...string) string {
 			return selectedItemStyle.Render("> " + strings.Join(s, " "))
