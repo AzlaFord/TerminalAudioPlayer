@@ -10,14 +10,16 @@ import (
 var docStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("111")).MarginTop(1).BorderStyle(lipgloss.ASCIIBorder())
 
 func (m Model) View() string {
+
+	tableMusic := baseStyle.Render(m.table.View()) + "\n"
 	style := lipgloss.NewStyle().Foreground(lipgloss.ANSIColor(11)).Background(lipgloss.Color("91"))
 	styled := style.Render("TUI Music Player")
-	block := lipgloss.Place(30, 80, lipgloss.Center, lipgloss.Bottom, styled)
-	if m.focusOnPlaylist {
-		return block + docStyle.Render(m.playListItem.View())
-	} else {
-		return baseStyle.Render(m.table.View()) + "\n"
-	}
+	block := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, styled)
+	list := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, tableMusic)
+	final := lipgloss.JoinHorizontal(0.05, docStyle.Render(m.playListItem.View()), list)
+
+	return block + final
+
 }
 
 type TrackStartingMsg struct {
