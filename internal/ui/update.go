@@ -7,9 +7,17 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-var docStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("111")).MarginTop(1).BorderStyle(lipgloss.ASCIIBorder())
+var docStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("111")).MarginTop(1).BorderStyle(lipgloss.NormalBorder())
 
 func (m Model) View() string {
+
+	if !m.focusOnPlaylist {
+		docStyle = docStyle.BorderForeground(lipgloss.Color("240"))
+		baseStyle = baseStyle.BorderForeground(lipgloss.Color("1"))
+	} else {
+		docStyle = docStyle.BorderForeground(lipgloss.Color("1"))
+		baseStyle = baseStyle.BorderForeground(lipgloss.Color("240"))
+	}
 
 	tableMusic := baseStyle.Render(m.table.View()) + "\n"
 	style := lipgloss.NewStyle().Foreground(lipgloss.ANSIColor(11)).Background(lipgloss.Color("91"))
@@ -66,7 +74,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 
 			}
-
 		}
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()

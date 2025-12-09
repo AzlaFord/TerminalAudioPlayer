@@ -34,7 +34,7 @@ type item struct {
 	index       int
 }
 
-var baseStyle = lipgloss.NewStyle().BorderStyle(lipgloss.NormalBorder()).BorderForeground(lipgloss.Color("240"))
+var baseStyle = lipgloss.NewStyle().BorderStyle(lipgloss.NormalBorder())
 var (
 	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
 	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170")).Background(lipgloss.Color("111"))
