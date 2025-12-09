@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/bubbles/list"
+	"github.com/charmbracelet/bubbles/progress"
 	"github.com/charmbracelet/bubbles/table"
-
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -27,6 +27,8 @@ type Model struct {
 	player          *audio.Player
 	status          string
 	focusOnPlaylist bool
+	percent         float64
+	progress        progress.Model
 }
 
 type item struct {
@@ -34,6 +36,7 @@ type item struct {
 	index       int
 }
 
+var barStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#626262")).Render
 var baseStyle = lipgloss.NewStyle().BorderStyle(lipgloss.NormalBorder()).BorderForeground(lipgloss.Color("240"))
 var (
 	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
@@ -43,6 +46,10 @@ var (
 	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
 )
 
+const (
+	padding  = 2
+	maxWidth = 80
+)
 const listHeight = 20
 
 type itemDelegate struct{}
