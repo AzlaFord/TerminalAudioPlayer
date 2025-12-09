@@ -34,10 +34,10 @@ type item struct {
 	index       int
 }
 
-var baseStyle = lipgloss.NewStyle().BorderStyle(lipgloss.NormalBorder())
+var baseStyle = lipgloss.NewStyle().BorderStyle(lipgloss.NormalBorder()).BorderForeground(lipgloss.Color("240"))
 var (
 	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
-	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170")).Background(lipgloss.Color("111"))
+	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Background(lipgloss.Color("240"))
 	paginationStyle   = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
 	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
 	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)

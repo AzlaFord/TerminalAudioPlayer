@@ -7,20 +7,20 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-var docStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("111")).MarginTop(1).BorderStyle(lipgloss.NormalBorder())
+var docStyle = lipgloss.NewStyle().MarginTop(1).BorderStyle(lipgloss.NormalBorder())
 
 func (m Model) View() string {
 
 	if !m.focusOnPlaylist {
 		docStyle = docStyle.BorderForeground(lipgloss.Color("240"))
-		baseStyle = baseStyle.BorderForeground(lipgloss.Color("1"))
+		baseStyle = baseStyle.BorderForeground(lipgloss.Color("111"))
 	} else {
-		docStyle = docStyle.BorderForeground(lipgloss.Color("1"))
+		docStyle = docStyle.BorderForeground(lipgloss.Color("111"))
 		baseStyle = baseStyle.BorderForeground(lipgloss.Color("240"))
 	}
 
 	tableMusic := baseStyle.Render(m.table.View()) + "\n"
-	style := lipgloss.NewStyle().Foreground(lipgloss.ANSIColor(11)).Background(lipgloss.Color("91"))
+	style := lipgloss.NewStyle().Background(lipgloss.Color("91"))
 	styled := style.Render("TUI Music Player")
 	block := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, styled)
 	list := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, tableMusic)
