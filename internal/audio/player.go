@@ -95,9 +95,19 @@ func (p *Player) PlayFile(path string) error {
 	return nil
 }
 
+func (p *Player) IsPlaying() bool {
+	return p.currentPlayer.IsPlaying()
+}
+
 func (p *Player) Pause() {
+
 	if p.currentPlayer == nil {
 		return
 	}
-	p.currentPlayer.Pause()
+	if p.currentPlayer.IsPlaying() {
+		p.currentPlayer.Pause()
+
+	} else {
+		p.currentPlayer.Play()
+	}
 }

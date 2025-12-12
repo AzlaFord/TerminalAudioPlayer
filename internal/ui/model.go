@@ -44,6 +44,7 @@ type Model struct {
 	percent         float64
 	progress        progress.Model
 	mute            bool
+	pause           bool
 }
 
 type item struct {
@@ -155,6 +156,7 @@ func NewModel(player *audio.Player) (Model, error) {
 		player:          player,
 		mute:            false,
 		keyMap:          DefaultKeyMap(),
+		pause:           false,
 	}, nil
 }
 
