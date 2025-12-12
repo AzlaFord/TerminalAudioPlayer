@@ -37,19 +37,31 @@ type Model struct {
 	table            table.Model
 	tracks           []playlist.Track
 	selectedTrack    int
-
-	player          *audio.Player
-	status          string
-	focusOnPlaylist bool
-	percent         float64
-	progress        progress.Model
-	mute            bool
-	pause           bool
+	KeyMapList       KeyMap
+	player           *audio.Player
+	status           string
+	focusOnPlaylist  bool
+	percent          float64
+	progress         progress.Model
+	mute             bool
+	pause            bool
 }
 
 type item struct {
 	title, desc string
 	index       int
+}
+
+type KeyMapList struct {
+	GoToTop  key.Binding
+	GoToLast key.Binding
+	Down     key.Binding
+	Up       key.Binding
+	PageUp   key.Binding
+	PageDown key.Binding
+	Back     key.Binding
+	Open     key.Binding
+	Select   key.Binding
 }
 
 var barStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#626262")).Render
@@ -134,6 +146,7 @@ func NewModel(player *audio.Player) (Model, error) {
 	const defaultWidth = 20
 	l := list.New(items, itemDelegate{}, defaultWidth, listHeight)
 	l.Title = "Playlists"
+	// de facut un filter frumos
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(false)
 	l.Styles.PaginationStyle = paginationStyle
@@ -143,7 +156,7 @@ func NewModel(player *audio.Player) (Model, error) {
 	if len(listPl) > 0 {
 		tracks = listPl[0].Tracks
 	}
-
+	l.KeyMap = list.DefaultKeyMap()
 	tbl := NewTable(tracks)
 
 	return Model{
@@ -156,7 +169,6 @@ func NewModel(player *audio.Player) (Model, error) {
 		player:          player,
 		mute:            false,
 		keyMap:          DefaultKeyMap(),
-		pause:           false,
 	}, nil
 }
 
@@ -215,5 +227,19 @@ func DefaultKeyMap() KeyMap {
 			key.WithKeys("end", "G"),
 			key.WithHelp("G/end", "go to end"),
 		),
+	}
+}
+
+func ListDefaultKeyMap() KeyMapList {
+	return KeyMapList{
+		GoToTop:  key.NewBinding(key.WithKeys("g"), key.WithHelp("g", "first")),
+		GoToLast: key.NewBinding(key.WithKeys("G"), key.WithHelp("G", "last")),
+		Down:     key.NewBinding(key.WithKeys("j", "down", "ctrl+n"), key.WithHelp("j", "down")),
+		Up:       key.NewBinding(key.WithKeys("k", "up", "ctrl+p"), key.WithHelp("k", "up")),
+		PageUp:   key.NewBinding(key.WithKeys("K", "pgup"), key.WithHelp("pgup", "page up")),
+		PageDown: key.NewBinding(key.WithKeys("J", "pgdown"), key.WithHelp("pgdown", "page down")),
+		Back:     key.NewBinding(key.WithKeys("h", "backspace", "left"), key.WithHelp("h", "back")),
+		Open:     key.NewBinding(key.WithKeys("l", "right", "enter"), key.WithHelp("l", "open")),
+		Select:   key.NewBinding(key.WithKeys("enter"), key.WithHelp("enter", "select")),
 	}
 }

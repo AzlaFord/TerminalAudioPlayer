@@ -99,7 +99,7 @@ func (p *Player) IsPlaying() bool {
 	return p.currentPlayer.IsPlaying()
 }
 
-func (p *Player) Pause() {
+func (p *Player) TogglePlayPause() {
 
 	if p.currentPlayer == nil {
 		return
