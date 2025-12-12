@@ -7,11 +7,13 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+// stilurile la lista cu playlisturi
 var docStyle = lipgloss.NewStyle().MarginTop(1).BorderStyle(lipgloss.NormalBorder())
 
 func (m Model) View() string {
 
 	if !m.focusOnPlaylist {
+		// daca e focus pe false se va aplica situruile la lista playlisturi si tabel
 		docStyle = docStyle.BorderForeground(lipgloss.Color("240"))
 		baseStyle = baseStyle.BorderForeground(lipgloss.Color("111"))
 	} else {
@@ -24,6 +26,7 @@ func (m Model) View() string {
 	styled := style.Render("TUI Music Player")
 	block := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, styled)
 	list := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, tableMusic)
+	// aici am combinat lista cu playlisuri si tabelul folosind JoinHorizontal
 	final := lipgloss.JoinHorizontal(0.05, docStyle.Render(m.playListItem.View()), list)
 
 	return block + final
@@ -40,7 +43,7 @@ type TrackErrorMsg struct {
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
-	step := m.player
+	player := m.player
 
 	switch msg := msg.(type) {
 
@@ -56,12 +59,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.focusOnPlaylist = false
 			m.table.Focus()
 		case "=":
-			step.IncreaseVolume(0.05)
+			player.IncreaseVolume(0.05)
 		case "space":
 			// de rezolvat problema cu space la pauza
-			step.Pause()
+			player.Pause()
 		case "-":
-			step.DecreaseVolume(0.05)
+			player.DecreaseVolume(0.05)
 		case "r":
 			if len(m.tracks) == 0 {
 				break
