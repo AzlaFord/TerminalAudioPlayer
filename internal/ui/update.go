@@ -50,7 +50,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "esc":
-			// de rezolvat problema esc da crash
 			m.focusOnPlaylist = true
 			m.table.Blur()
 		case "q":
@@ -77,6 +76,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				break
 			}
 			if !m.focusOnPlaylist {
+				m.selectedTrack = m.table.Cursor()
 				idx := m.table.Cursor()
 				if idx >= 0 && idx < len(m.tracks) {
 					tracks := m.tracks[idx]

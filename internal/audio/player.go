@@ -12,6 +12,7 @@ type Player struct {
 	otoCtx        *oto.Context
 	currentPlayer *oto.Player
 	Volume        float64
+	pause         bool
 }
 
 func NewPlayer() (*Player, error) {
@@ -106,8 +107,9 @@ func (p *Player) TogglePlayPause() {
 	}
 	if p.currentPlayer.IsPlaying() {
 		p.currentPlayer.Pause()
-
+		p.pause = true
 	} else {
 		p.currentPlayer.Play()
+		p.pause = false
 	}
 }
