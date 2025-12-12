@@ -17,8 +17,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-type TickMsg struct {
-}
+type TickMsg struct{}
 
 type KeyMap struct {
 	LineUp       key.Binding

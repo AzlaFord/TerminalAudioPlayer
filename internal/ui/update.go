@@ -2,6 +2,7 @@ package ui
 
 import (
 	"TerminalAudioPlayer/internal/playlist"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -45,11 +46,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	player := m.player
 
-	if m.shouldAutoNext() {
-
-	}
-
 	switch msg := msg.(type) {
+
+	case TickMsg:
+		if m.shouldAutoNext() {
+			m.selectedTrack++
+			return m, tea.Batch(m.playTrackCmd(m.tracks[m.selectedTrack]), tickCmd())
+		}
 
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -81,10 +84,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			if !m.focusOnPlaylist {
 				m.selectedTrack = m.table.Cursor()
+				m.selectedTrack = m.table.Cursor()
 				idx := m.table.Cursor()
 				if idx >= 0 && idx < len(m.tracks) {
 					tracks := m.tracks[idx]
-					return m, m.playTrackCmd(tracks)
+					return m, tea.Batch(m.playTrackCmd(tracks), tickCmd())
 				}
 			}
 		}
@@ -112,10 +116,20 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Model) shouldAutoNext() bool {
 	player := m.player
 
-	if !player.IsPlaying() && !player.IsPaused() && player != nil && m.selectedTrack < len(m.tracks) {
-		return true
+	if player == nil {
+		return false
 	}
-	return false
+	if player.IsPaused() {
+		return false
+	}
+	if player.IsPlaying() {
+		return false
+	}
+	if m.selectedTrack+1 >= len(m.tracks) {
+		return false
+	}
+	return true
+
 }
 
 func (m Model) playTrackCmd(t playlist.Track) tea.Cmd {
@@ -128,4 +142,10 @@ func (m Model) playTrackCmd(t playlist.Track) tea.Cmd {
 		}
 		return TrackStartingMsg{Title: t.Title}
 	}
+}
+
+func tickCmd() tea.Cmd {
+	return tea.Tick(200*time.Millisecond, func(time.Time) tea.Msg {
+		return TickMsg{}
+	})
 }
