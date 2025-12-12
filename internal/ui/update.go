@@ -60,7 +60,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.table.Focus()
 		case "=":
 			player.IncreaseVolume(0.05)
-		case "space":
+		case " ":
 			// de rezolvat problema cu space la pauza
 			player.Pause()
 		case "m":

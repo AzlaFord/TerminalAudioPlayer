@@ -18,23 +18,14 @@ import (
 )
 
 type KeyMap struct {
-	CursorUp    key.Binding
-	CursorDown  key.Binding
-	NextPage    key.Binding
-	PrevPage    key.Binding
-	GoToStart   key.Binding
-	GoToEnd     key.Binding
-	Filter      key.Binding
-	ClearFilter key.Binding
-
-	CancelWhileFiltering key.Binding
-	AcceptWhileFiltering key.Binding
-
-	ShowFullHelp  key.Binding
-	CloseFullHelp key.Binding
-
-	Quit      key.Binding
-	ForceQuit key.Binding
+	LineUp       key.Binding
+	LineDown     key.Binding
+	PageUp       key.Binding
+	PageDown     key.Binding
+	HalfPageUp   key.Binding
+	HalfPageDown key.Binding
+	GotoTop      key.Binding
+	GotoBottom   key.Binding
 }
 
 type Model struct {
@@ -113,6 +104,7 @@ func NewTable(tracks []playlist.Track) table.Model {
 		table.WithFocused(false),
 		table.WithHeight(20),
 	)
+	t.KeyMap = table.KeyMap(DefaultKeyMap())
 
 	s := table.DefaultStyles()
 	s.Header = s.Header.BorderStyle(lipgloss.NormalBorder()).BorderForeground(lipgloss.Color("240")).BorderBottom(true).Bold(false)
@@ -187,68 +179,39 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 
 	fmt.Fprint(w, fn(str))
 }
-
 func DefaultKeyMap() KeyMap {
 	return KeyMap{
-		// Browsing.
-		CursorUp: key.NewBinding(
+		LineUp: key.NewBinding(
 			key.WithKeys("up", "k"),
 			key.WithHelp("↑/k", "up"),
 		),
-		CursorDown: key.NewBinding(
+		LineDown: key.NewBinding(
 			key.WithKeys("down", "j"),
 			key.WithHelp("↓/j", "down"),
 		),
-		PrevPage: key.NewBinding(
-			key.WithKeys("left", "h", "pgup", "b", "u"),
-			key.WithHelp("←/h/pgup", "prev page"),
+		PageUp: key.NewBinding(
+			key.WithKeys("pgup"),
+			key.WithHelp("b/pgup", "page up"),
 		),
-		NextPage: key.NewBinding(
-			key.WithKeys("right", "l", "pgdown", "f", "d"),
-			key.WithHelp("→/l/pgdn", "next page"),
+		PageDown: key.NewBinding(
+			key.WithKeys("f", "pgdown"),
+			key.WithHelp("f/pgdn", "page down"),
 		),
-		GoToStart: key.NewBinding(
-			key.WithKeys("home"),
+		HalfPageUp: key.NewBinding(
+			key.WithKeys("u", "ctrl+u"),
+			key.WithHelp("u", "½ page up"),
+		),
+		HalfPageDown: key.NewBinding(
+			key.WithKeys("ctrl+d"),
+			key.WithHelp("d", "½ page down"),
+		),
+		GotoTop: key.NewBinding(
+			key.WithKeys("home", "g"),
 			key.WithHelp("g/home", "go to start"),
 		),
-		GoToEnd: key.NewBinding(
-			key.WithKeys("end"),
+		GotoBottom: key.NewBinding(
+			key.WithKeys("end", "G"),
 			key.WithHelp("G/end", "go to end"),
 		),
-		Filter: key.NewBinding(
-			key.WithKeys("/"),
-			key.WithHelp("/", "filter"),
-		),
-		ClearFilter: key.NewBinding(
-			key.WithKeys("/"),
-			key.WithHelp("/", "clear filter"),
-		),
-
-		// Filtering.
-		CancelWhileFiltering: key.NewBinding(
-			key.WithKeys("tab"),
-			key.WithHelp("tab", "cancel"),
-		),
-		AcceptWhileFiltering: key.NewBinding(
-			key.WithKeys("e", "shift+tab", "ctrl+k", "up", "ctrl+j", "down"),
-			key.WithHelp("e", "apply filter"),
-		),
-
-		// Toggle help.
-		ShowFullHelp: key.NewBinding(
-			key.WithKeys("?"),
-			key.WithHelp("?", "more"),
-		),
-		CloseFullHelp: key.NewBinding(
-			key.WithKeys("?"),
-			key.WithHelp("?", "close help"),
-		),
-
-		// Quitting.
-		Quit: key.NewBinding(
-			key.WithKeys("q", "esc"),
-			key.WithHelp("q", "quit"),
-		),
-		ForceQuit: key.NewBinding(key.WithKeys("ctrl+c")),
 	}
 }
