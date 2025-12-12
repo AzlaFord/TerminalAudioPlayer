@@ -71,7 +71,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				player.IncreaseVolume(1)
 				m.mute = false
 			}
-
 		case "-":
 			player.DecreaseVolume(0.05)
 		case "r":
