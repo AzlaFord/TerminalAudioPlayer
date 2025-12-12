@@ -63,6 +63,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "space":
 			// de rezolvat problema cu space la pauza
 			player.Pause()
+		case "m":
+			if !m.mute {
+				player.DecreaseVolume(1)
+				m.mute = true
+			} else {
+				player.IncreaseVolume(1)
+				m.mute = false
+			}
+
 		case "-":
 			player.DecreaseVolume(0.05)
 		case "r":

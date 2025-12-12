@@ -29,6 +29,7 @@ type Model struct {
 	focusOnPlaylist bool
 	percent         float64
 	progress        progress.Model
+	mute            bool
 }
 
 type item struct {
@@ -137,6 +138,7 @@ func NewModel(player *audio.Player) (Model, error) {
 		playListItem:    l,
 		table:           tbl,
 		player:          player,
+		mute:            false,
 	}, nil
 }
 
