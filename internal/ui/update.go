@@ -48,11 +48,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 
+	// de facut sa se miste curosrul cand se termina piesa
 	case TickMsg:
 		if m.shouldAutoNext() {
 			m.selectedTrack++
+			m.table.Cursor()
 			return m, tea.Batch(m.playTrackCmd(m.tracks[m.selectedTrack]), tickCmd())
 		}
+		return m, tickCmd()
 
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -83,7 +86,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				break
 			}
 			if !m.focusOnPlaylist {
-				m.selectedTrack = m.table.Cursor()
 				m.selectedTrack = m.table.Cursor()
 				idx := m.table.Cursor()
 				if idx >= 0 && idx < len(m.tracks) {
