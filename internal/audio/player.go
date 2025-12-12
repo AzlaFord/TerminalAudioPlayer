@@ -71,7 +71,7 @@ func (p *Player) SetVolume(volume float64) error {
 }
 
 func (p *Player) PlayFile(path string) error {
-
+	p.pause = false
 	file, err := os.ReadFile(path)
 	if err != nil {
 		return err
@@ -112,4 +112,8 @@ func (p *Player) TogglePlayPause() {
 		p.currentPlayer.Play()
 		p.pause = false
 	}
+}
+
+func (p *Player) IsPaused() bool {
+	return p.pause
 }

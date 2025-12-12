@@ -45,6 +45,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	player := m.player
 
+	if m.shouldAutoNext() {
+
+	}
+
 	switch msg := msg.(type) {
 
 	case tea.KeyMsg:
@@ -83,10 +87,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, m.playTrackCmd(tracks)
 				}
 			}
-		case "n":
-			if player.IsPlaying() {
-
-			}
 		}
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
@@ -109,8 +109,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m Model) playTrackCmd(t playlist.Track) tea.Cmd {
+func (m Model) shouldAutoNext() bool {
+	player := m.player
 
+	if !player.IsPlaying() && !player.IsPaused() && player != nil && m.selectedTrack < len(m.tracks) {
+		return true
+	}
+	return false
+}
+
+func (m Model) playTrackCmd(t playlist.Track) tea.Cmd {
 	p := m.player
 
 	return func() tea.Msg {

@@ -17,6 +17,9 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+type TickMsg struct {
+}
+
 type KeyMap struct {
 	LineUp       key.Binding
 	LineDown     key.Binding
@@ -238,7 +241,7 @@ func ListDefaultKeyMap() KeyMapList {
 		Up:       key.NewBinding(key.WithKeys("k", "up", "ctrl+p"), key.WithHelp("k", "up")),
 		PageUp:   key.NewBinding(key.WithKeys("K", "pgup"), key.WithHelp("pgup", "page up")),
 		PageDown: key.NewBinding(key.WithKeys("J", "pgdown"), key.WithHelp("pgdown", "page down")),
-		Back:     key.NewBinding(key.WithKeys("h", "backspace", "left"), key.WithHelp("h", "back")),
+		Back:     key.NewBinding(key.WithKeys("h", "backspace", "left"), key.WithHelp("esc", "esc")),
 		Open:     key.NewBinding(key.WithKeys("l", "right", "enter"), key.WithHelp("l", "open")),
 		Select:   key.NewBinding(key.WithKeys("enter"), key.WithHelp("enter", "select")),
 	}
