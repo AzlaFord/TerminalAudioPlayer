@@ -4,39 +4,8 @@ import (
 	"TerminalAudioPlayer/internal/playlist"
 	"time"
 
-	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 )
-
-// stilurile la lista cu playlisturi
-var docStyle = lipgloss.NewStyle().MarginTop(1).BorderStyle(lipgloss.NormalBorder())
-
-func (m Model) View() string {
-
-	m.help = help.New()
-	m.help.ShowAll = true
-	// helpView := m.help.View(m.KeyMapList)
-
-	if !m.focusOnPlaylist {
-		// daca e focus pe false se va aplica situruile la lista playlisturi si tabel
-		docStyle = docStyle.BorderForeground(lipgloss.Color("240"))
-		baseStyle = baseStyle.BorderForeground(lipgloss.Color("111"))
-	} else {
-		docStyle = docStyle.BorderForeground(lipgloss.Color("111"))
-		baseStyle = baseStyle.BorderForeground(lipgloss.Color("240"))
-	}
-
-	tableMusic := baseStyle.Render(m.table.View()) + "\n"
-	style := lipgloss.NewStyle().Background(lipgloss.Color("91"))
-	styled := style.Render("TUI Music Player")
-	block := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, styled)
-	list := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, tableMusic)
-	// aici am combinat lista cu playlisuri si tabelul folosind JoinHorizontal
-	final := lipgloss.JoinHorizontal(0.05, docStyle.Render(m.playListItem.View()), list)
-
-	return block + final
-}
 
 type TrackStartingMsg struct {
 	Title string
@@ -51,8 +20,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	player := m.player
 
 	switch msg := msg.(type) {
-
-	// de facut sa se miste curosrul cand se termina piesa
 	case TickMsg:
 		if m.shouldAutoNext() {
 			m.selectedTrack++
@@ -155,6 +122,7 @@ func (m Model) canHitNext() bool {
 	}
 	return true
 }
+
 func (m Model) canHitPrev() bool {
 	p := m.player
 
