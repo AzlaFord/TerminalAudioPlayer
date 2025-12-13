@@ -83,6 +83,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				player.IncreaseVolume(1)
 				m.mute = false
 			}
+
+		case "b":
+			if m.canHitPrev() {
+				m.selectedTrack--
+				m.table.SetCursor(m.selectedTrack)
+				return m, m.playTrackCmd(m.tracks[m.selectedTrack])
+			}
 		case "n":
 			if m.canHitNext() {
 				m.selectedTrack++
@@ -151,6 +158,17 @@ func (m Model) canHitNext() bool {
 		return false
 	}
 	if m.selectedTrack+1 >= len(m.tracks) {
+		return false
+	}
+	return true
+}
+func (m Model) canHitPrev() bool {
+	p := m.player
+
+	if p == nil {
+		return false
+	}
+	if m.selectedTrack-1 < 0 {
 		return false
 	}
 	return true
