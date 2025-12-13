@@ -129,7 +129,7 @@ func NewModel(player *audio.Player) (Model, error) {
 	l.SetFilteringEnabled(false)
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
-
+	l.SetShowHelp(false)
 	// verific daca lista exista macar si iau primul element adica lista cu cantece
 	if len(listPl) > 0 {
 		tracks = listPl[0].Tracks
@@ -147,7 +147,7 @@ func NewModel(player *audio.Player) (Model, error) {
 		player:          player,
 		mute:            false,
 		keyMap:          DefaultKeyMap(),
-		selectedTrack:   11111111,
+		selectedTrack:   0,
 		KeyMapList:      ListDefaultKeyMap(),
 	}, nil
 }

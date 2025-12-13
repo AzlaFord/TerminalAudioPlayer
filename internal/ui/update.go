@@ -36,7 +36,6 @@ func (m Model) View() string {
 	final := lipgloss.JoinHorizontal(0.05, docStyle.Render(m.playListItem.View()), list)
 
 	return block + final
-
 }
 
 type TrackStartingMsg struct {
@@ -57,6 +56,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case TickMsg:
 		if m.shouldAutoNext() {
 			m.selectedTrack++
+			m.table.SetCursor(m.selectedTrack)
 			return m, tea.Batch(m.playTrackCmd(m.tracks[m.selectedTrack]), tickCmd())
 		}
 		return m, tickCmd()
@@ -86,9 +86,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "n":
 			if m.canHitNext() {
 				m.selectedTrack++
+				m.table.SetCursor(m.selectedTrack)
 				return m, m.playTrackCmd(m.tracks[m.selectedTrack])
 			}
-
 		case "-":
 			player.DecreaseVolume(0.05)
 		case "r":
@@ -104,7 +104,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		}
-
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
 		m.playListItem.SetSize(msg.Width-h, msg.Height-v)
