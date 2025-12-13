@@ -76,14 +76,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case " ":
 			player.TogglePlayPause()
 		case "m":
-			if !m.mute {
-				player.DecreaseVolume(1)
-				m.mute = true
-			} else {
-				player.IncreaseVolume(1)
-				m.mute = false
-			}
-
+			player.SetMute()
 		case "b":
 			if m.canHitPrev() {
 				m.selectedTrack--

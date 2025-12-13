@@ -9,10 +9,11 @@ import (
 )
 
 type Player struct {
-	otoCtx        *oto.Context
-	currentPlayer *oto.Player
-	Volume        float64
-	pause         bool
+	otoCtx          *oto.Context
+	currentPlayer   *oto.Player
+	Volume          float64
+	pause           bool
+	prevValueVolume float64
 }
 
 func NewPlayer() (*Player, error) {
@@ -31,7 +32,6 @@ func NewPlayer() (*Player, error) {
 	<-readyChan
 	p.otoCtx = ctx
 	return p, nil
-
 }
 
 // ia volumul
@@ -68,6 +68,20 @@ func (p *Player) SetVolume(volume float64) error {
 	p.Volume = volume
 	p.currentPlayer.SetVolume(p.Volume)
 	return nil
+}
+
+func (p *Player) SetMute() bool {
+
+	if p.Volume != 0.0 {
+		p.prevValueVolume = p.GetVolume()
+		p.SetVolume(0.0)
+		return true
+	}
+	if p.Volume == 0.0 {
+		p.SetVolume(p.prevValueVolume)
+		return false
+	}
+	return false
 }
 
 func (p *Player) PlayFile(path string) error {
