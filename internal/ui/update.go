@@ -16,7 +16,7 @@ func (m Model) View() string {
 
 	m.help = help.New()
 	m.help.ShowAll = true
-	helpView := m.help.View(m.KeyMapList)
+	// helpView := m.help.View(m.KeyMapList)
 
 	if !m.focusOnPlaylist {
 		// daca e focus pe false se va aplica situruile la lista playlisturi si tabel
@@ -35,7 +35,7 @@ func (m Model) View() string {
 	// aici am combinat lista cu playlisuri si tabelul folosind JoinHorizontal
 	final := lipgloss.JoinHorizontal(0.05, docStyle.Render(m.playListItem.View()), list)
 
-	return block + final + helpView
+	return block + final
 
 }
 
@@ -57,7 +57,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case TickMsg:
 		if m.shouldAutoNext() {
 			m.selectedTrack++
-			m.table.Cursor()
 			return m, tea.Batch(m.playTrackCmd(m.tracks[m.selectedTrack]), tickCmd())
 		}
 		return m, tickCmd()
@@ -84,6 +83,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				player.IncreaseVolume(1)
 				m.mute = false
 			}
+		case "n":
+			if m.canHitNext() {
+				m.selectedTrack++
+				return m, m.playTrackCmd(m.tracks[m.selectedTrack])
+			}
+
 		case "-":
 			player.DecreaseVolume(0.05)
 		case "r":
@@ -99,6 +104,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		}
+
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
 		m.playListItem.SetSize(msg.Width-h, msg.Height-v)
@@ -137,6 +143,18 @@ func (m Model) shouldAutoNext() bool {
 	}
 	return true
 
+}
+
+func (m Model) canHitNext() bool {
+	p := m.player
+
+	if p == nil {
+		return false
+	}
+	if m.selectedTrack+1 >= len(m.tracks) {
+		return false
+	}
+	return true
 }
 
 func (m Model) playTrackCmd(t playlist.Track) tea.Cmd {
