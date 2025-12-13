@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"strconv"
+
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -11,6 +13,7 @@ var volume = lipgloss.NewStyle().Background(lipgloss.Color("91"))
 var docStyle = lipgloss.NewStyle().MarginTop(1).BorderStyle(lipgloss.NormalBorder())
 
 func (m Model) View() string {
+	player := m.player
 
 	m.help = help.New()
 	m.help.ShowAll = true
@@ -27,10 +30,16 @@ func (m Model) View() string {
 	tableMusic := baseStyle.Render(m.table.View()) + "\n"
 	style := lipgloss.NewStyle().Background(lipgloss.Color("91"))
 	styled := style.Render("TUI Music Player")
+	// de rezolvat problmea crash cand dau volume - cand nu e inizitalizat playerul cred
+	volumeStilat := volume.Render("Volume :" + strconv.Itoa(int(player.Volume*100)))
+	volume := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, volumeStilat)
 	block := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, styled)
+
+	blocTitle := lipgloss.JoinHorizontal(0, block, volume)
+
 	list := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, tableMusic)
 	// aici am combinat lista cu playlisuri si tabelul folosind JoinHorizontal
 	final := lipgloss.JoinHorizontal(0.05, docStyle.Render(m.playListItem.View()), list)
 
-	return block + final
+	return blocTitle + final
 }
