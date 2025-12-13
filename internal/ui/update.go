@@ -4,6 +4,7 @@ import (
 	"TerminalAudioPlayer/internal/playlist"
 	"time"
 
+	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -12,6 +13,10 @@ import (
 var docStyle = lipgloss.NewStyle().MarginTop(1).BorderStyle(lipgloss.NormalBorder())
 
 func (m Model) View() string {
+
+	m.help = help.New()
+	m.help.ShowAll = true
+	helpView := m.help.View(m.KeyMapList)
 
 	if !m.focusOnPlaylist {
 		// daca e focus pe false se va aplica situruile la lista playlisturi si tabel
@@ -30,7 +35,7 @@ func (m Model) View() string {
 	// aici am combinat lista cu playlisuri si tabelul folosind JoinHorizontal
 	final := lipgloss.JoinHorizontal(0.05, docStyle.Render(m.playListItem.View()), list)
 
-	return block + final
+	return block + final + helpView
 
 }
 

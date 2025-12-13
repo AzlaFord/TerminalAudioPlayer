@@ -8,8 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/key"
-
+	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/progress"
 	"github.com/charmbracelet/bubbles/table"
@@ -19,18 +18,8 @@ import (
 
 type TickMsg struct{}
 
-type KeyMap struct {
-	LineUp       key.Binding
-	LineDown     key.Binding
-	PageUp       key.Binding
-	PageDown     key.Binding
-	HalfPageUp   key.Binding
-	HalfPageDown key.Binding
-	GotoTop      key.Binding
-	GotoBottom   key.Binding
-}
-
 type Model struct {
+	help             help.Model
 	playlists        []playlist.Playlist
 	keyMap           KeyMap
 	selectedPlaylist int
@@ -39,7 +28,7 @@ type Model struct {
 	table            table.Model
 	tracks           []playlist.Track
 	selectedTrack    int
-	KeyMapList       KeyMap
+	KeyMapList       KeyMapList
 	player           *audio.Player
 	status           string
 	focusOnPlaylist  bool
@@ -51,18 +40,6 @@ type Model struct {
 type item struct {
 	title, desc string
 	index       int
-}
-
-type KeyMapList struct {
-	GoToTop  key.Binding
-	GoToLast key.Binding
-	Down     key.Binding
-	Up       key.Binding
-	PageUp   key.Binding
-	PageDown key.Binding
-	Back     key.Binding
-	Open     key.Binding
-	Select   key.Binding
 }
 
 var barStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#626262")).Render
@@ -171,6 +148,7 @@ func NewModel(player *audio.Player) (Model, error) {
 		mute:            false,
 		keyMap:          DefaultKeyMap(),
 		selectedTrack:   11111111,
+		KeyMapList:      ListDefaultKeyMap(),
 	}, nil
 }
 
@@ -194,54 +172,4 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 	}
 
 	fmt.Fprint(w, fn(str))
-}
-func DefaultKeyMap() KeyMap {
-	return KeyMap{
-		LineUp: key.NewBinding(
-			key.WithKeys("up", "k"),
-			key.WithHelp("↑/k", "up"),
-		),
-		LineDown: key.NewBinding(
-			key.WithKeys("down", "j"),
-			key.WithHelp("↓/j", "down"),
-		),
-		PageUp: key.NewBinding(
-			key.WithKeys("pgup"),
-			key.WithHelp("b/pgup", "page up"),
-		),
-		PageDown: key.NewBinding(
-			key.WithKeys("f", "pgdown"),
-			key.WithHelp("f/pgdn", "page down"),
-		),
-		HalfPageUp: key.NewBinding(
-			key.WithKeys("u", "ctrl+u"),
-			key.WithHelp("u", "½ page up"),
-		),
-		HalfPageDown: key.NewBinding(
-			key.WithKeys("ctrl+d"),
-			key.WithHelp("d", "½ page down"),
-		),
-		GotoTop: key.NewBinding(
-			key.WithKeys("home", "g"),
-			key.WithHelp("g/home", "go to start"),
-		),
-		GotoBottom: key.NewBinding(
-			key.WithKeys("end", "G"),
-			key.WithHelp("G/end", "go to end"),
-		),
-	}
-}
-
-func ListDefaultKeyMap() KeyMapList {
-	return KeyMapList{
-		GoToTop:  key.NewBinding(key.WithKeys("g"), key.WithHelp("g", "first")),
-		GoToLast: key.NewBinding(key.WithKeys("G"), key.WithHelp("G", "last")),
-		Down:     key.NewBinding(key.WithKeys("j", "down", "ctrl+n"), key.WithHelp("j", "down")),
-		Up:       key.NewBinding(key.WithKeys("k", "up", "ctrl+p"), key.WithHelp("k", "up")),
-		PageUp:   key.NewBinding(key.WithKeys("K", "pgup"), key.WithHelp("pgup", "page up")),
-		PageDown: key.NewBinding(key.WithKeys("J", "pgdown"), key.WithHelp("pgdown", "page down")),
-		Back:     key.NewBinding(key.WithKeys("h", "backspace", "left"), key.WithHelp("esc", "esc")),
-		Open:     key.NewBinding(key.WithKeys("l", "right", "enter"), key.WithHelp("l", "open")),
-		Select:   key.NewBinding(key.WithKeys("enter"), key.WithHelp("enter", "select")),
-	}
 }
