@@ -55,6 +55,7 @@ func (p *Player) SetVolume(volume float64) error {
 
 	if p.currentPlayer == nil {
 		p.Volume = volume
+		return nil
 	}
 
 	if volume > 1.0 {
