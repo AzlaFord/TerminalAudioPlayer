@@ -14,7 +14,7 @@ var docStyle = lipgloss.NewStyle().MarginTop(1).BorderStyle(lipgloss.NormalBorde
 
 func (m Model) View() string {
 	player := m.player
-
+	track := m.tracks
 	m.help = help.New()
 	m.help.ShowAll = true
 
@@ -35,11 +35,19 @@ func (m Model) View() string {
 	volume := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, volumeStilat)
 	block := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, styled)
 
-	blocTitle := lipgloss.JoinHorizontal(0, block, volume)
-
 	list := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, tableMusic)
 	// aici am combinat lista cu playlisuri si tabelul folosind JoinHorizontal
 	final := lipgloss.JoinHorizontal(0.05, docStyle.Render(m.playListItem.View()), list)
 
-	return blocTitle + final
+	if track != nil {
+
+		playStyle := lipgloss.NewStyle().Background(lipgloss.Color("111"))
+		playing := playStyle.Render("Playing :", track[m.selectedTrack].Title)
+		play := lipgloss.Place(10, 10, lipgloss.Bottom, lipgloss.Bottom, playing)
+		blocTitle := lipgloss.JoinHorizontal(0, block, volume, play)
+		return blocTitle + final
+	} else {
+		blocTitle := lipgloss.JoinHorizontal(0, block, volume)
+		return blocTitle + final
+	}
 }
