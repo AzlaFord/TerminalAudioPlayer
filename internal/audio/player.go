@@ -52,12 +52,6 @@ func (p *Player) DecreaseVolume(step float64) {
 // seteaza volumul apelat in DecreseVolume si IncreaseVolume
 // volume e practic rezultatul la default volume + sau - la step
 func (p *Player) SetVolume(volume float64) error {
-
-	if p.currentPlayer == nil {
-		p.Volume = volume
-		return nil
-	}
-
 	if volume > 1.0 {
 		volume = 1.0
 	}
@@ -67,6 +61,10 @@ func (p *Player) SetVolume(volume float64) error {
 	}
 
 	p.Volume = volume
+	if p.currentPlayer == nil {
+		p.Volume = volume
+		return nil
+	}
 	p.currentPlayer.SetVolume(p.Volume)
 	return nil
 }

@@ -31,7 +31,7 @@ func (m Model) View() string {
 	style := lipgloss.NewStyle().Background(lipgloss.Color("91"))
 	styled := style.Render("TUI Music Player")
 	// de rezolvat problmea crash cand dau volume - cand nu e inizitalizat playerul cred
-	volumeStilat := volume.Render("Volume :" + strconv.Itoa(int(player.Volume*100)))
+	volumeStilat := volume.Render("Volume :" + strconv.Itoa(int(player.GetVolume()*100)))
 	volume := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, volumeStilat)
 	block := lipgloss.Place(30, 10, lipgloss.Center, lipgloss.Bottom, styled)
 
