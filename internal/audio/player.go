@@ -110,6 +110,9 @@ func (p *Player) PlayFile(path string) error {
 }
 
 func (p *Player) IsPlaying() bool {
+	if p.currentPlayer == nil {
+		return false
+	}
 	return p.currentPlayer.IsPlaying()
 }
 

@@ -39,7 +39,7 @@ func (m Model) View() string {
 	// aici am combinat lista cu playlisuri si tabelul folosind JoinHorizontal
 	final := lipgloss.JoinHorizontal(0.05, docStyle.Render(m.playListItem.View()), list)
 
-	if track != nil {
+	if player.IsPlaying() {
 
 		playStyle := lipgloss.NewStyle().Background(lipgloss.Color("111"))
 		playing := playStyle.Render("Playing :", track[m.selectedTrack].Title)

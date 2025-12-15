@@ -30,7 +30,6 @@ type Model struct {
 	selectedTrack    int
 	KeyMapList       KeyMapList
 	player           *audio.Player
-	status           string
 	focusOnPlaylist  bool
 	percent          float64
 	progress         progress.Model
@@ -139,7 +138,6 @@ func NewModel(player *audio.Player) (Model, error) {
 	return Model{
 		playlists:       listPl,
 		tracks:          tracks,
-		status:          "ready",
 		focusOnPlaylist: true,
 		playListItem:    l,
 		table:           tbl,
